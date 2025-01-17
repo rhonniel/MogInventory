@@ -3,6 +3,7 @@ package com.rx.MogInventory.entity;
 import jakarta.persistence.*;
 
 @Table(name="item_sub_type")
+@Entity
 public class ItemSubType {
     @Id
     private int id;

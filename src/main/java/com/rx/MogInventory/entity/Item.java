@@ -3,6 +3,7 @@ package com.rx.MogInventory.entity;
 import jakarta.persistence.*;
 
 @Table
+@Entity
 public class Item {
 
     @Id

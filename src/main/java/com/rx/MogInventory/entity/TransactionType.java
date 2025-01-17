@@ -3,6 +3,7 @@ package com.rx.MogInventory.entity;
 import jakarta.persistence.*;
 
 @Table(name = "transaction_type")
+@Entity
 public class TransactionType {
     @Id
     private int id;

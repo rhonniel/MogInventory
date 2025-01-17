@@ -2,10 +2,12 @@ package com.rx.MogInventory.entity;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Table(name = "item_type")
+@Entity
 public class ItemType {
 
     @Id
