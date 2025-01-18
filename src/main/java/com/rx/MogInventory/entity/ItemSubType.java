@@ -18,6 +18,10 @@ public class ItemSubType {
     public ItemSubType() {
     }
 
+    public ItemSubType(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

@@ -17,7 +17,7 @@ public class Item {
     private String description;
 
     @JoinColumn(name = "sub_type_id", referencedColumnName = "id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private ItemSubType subType;
 
     @Column
@@ -35,6 +35,10 @@ public class Item {
         this.subType = subType;
         this.quantity = quantity;
         this.enable = enable;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
