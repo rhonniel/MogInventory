@@ -1,6 +1,9 @@
 package com.rx.MogInventory.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Table
 @Entity
@@ -11,15 +14,18 @@ public class Item {
     private int id;
 
     @Column
+    @NotBlank
     private String name;
 
     @Column
+    @NotBlank
     private String description;
 
     @JoinColumn(name = "sub_type_id", referencedColumnName = "id")
     @ManyToOne
     private ItemSubType subType;
 
+    @PositiveOrZero
     @Column
     private int quantity;
 
