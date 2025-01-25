@@ -1,11 +1,11 @@
 package com.rx.MogInventory.controller;
 
 import com.rx.MogInventory.entity.Item;
+import com.rx.MogInventory.entity.dto.ItemCrudDTO;
 import com.rx.MogInventory.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,7 +27,7 @@ public class ItemController {
 
 
     @PostMapping
-    public Item saveItem(@RequestBody Item item){
+    public Item saveItem(@RequestBody ItemCrudDTO item){
        return itemService.save(item);
 
     }
@@ -39,7 +39,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public Item editItem(@PathVariable("id") Integer itemId,@RequestBody Item item){
+    public Item editItem(@PathVariable("id") Integer itemId,@RequestBody ItemCrudDTO item){
 
       return itemService.editItem(itemId,item);
 
