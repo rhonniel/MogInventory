@@ -22,7 +22,7 @@ public class ItemService {
     }
 
     public List<Item> getAllItems(){
-       return itemRepository.findAll();
+       return itemRepository.findAll() ;
     }
 
     public Item save(ItemCrudDTO item) {
