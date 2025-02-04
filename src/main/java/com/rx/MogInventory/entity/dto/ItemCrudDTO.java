@@ -38,4 +38,13 @@ public class ItemCrudDTO {
     public void setSubType(int subType) {
         this.subType = subType;
     }
+
+    @Override
+    public String toString() {
+        return "ItemCrudDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", subType=" + subType +
+                '}';
+    }
 }
