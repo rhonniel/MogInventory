@@ -1,6 +1,7 @@
 package com.rx.MogInventory.config;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
@@ -33,12 +34,19 @@ public class GlobalExceptionHandler {
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage());
             }
         } else if (ex instanceof ValidationException ||ex instanceof MappingException||ex instanceof  IllegalArgumentException ) {
-            errors.put("error", ex.getMessage());
+            errors.put("errors", ex.getMessage());
         } else {
             errors.put("error", "Unknown validation error occurred.");
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleGlobalNotFoundException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
