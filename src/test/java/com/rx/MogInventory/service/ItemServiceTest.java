@@ -5,6 +5,7 @@ import com.rx.MogInventory.entity.Item;
 import com.rx.MogInventory.entity.ItemSubType;
 import com.rx.MogInventory.entity.dto.ItemCrudDTO;
 import com.rx.MogInventory.repository.ItemRepository;
+import com.rx.MogInventory.repository.SubTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,6 +28,8 @@ public class ItemServiceTest {
 
     @Mock
     private ItemRepository itemRepository;
+    @Mock
+    private SubTypeRepository subTypeRepository;
     @Mock
     private ModelMapper modelMapper;
 
@@ -93,6 +96,7 @@ public class ItemServiceTest {
 
 
         when(modelMapper.map(dto,Item.class)).thenReturn(item);
+        when(subTypeRepository.existsById(dto.getSubType())).thenReturn(true);
         when(itemRepository.save(item)).thenReturn(item);
 
         Item result= itemService.save(dto);
@@ -118,6 +122,7 @@ public class ItemServiceTest {
         item.setSubType(new ItemSubType(dto.getSubType()));
 
         when(itemRepository.findById(id)).thenReturn(Optional.of(item));
+        when(subTypeRepository.existsById(dto.getSubType())).thenReturn(true);
         when(modelMapper.map(dto,Item.class)).thenReturn(item);
         when(itemRepository.save(item)).thenReturn(item);
 
