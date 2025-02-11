@@ -27,9 +27,6 @@ public class Item {
     @NotNull
     private ItemSubType subType;
 
-    @PositiveOrZero
-    @Column
-    private int quantity;
 
     @Column
     private boolean enable;
@@ -37,11 +34,14 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, String description, ItemSubType subType, int quantity, boolean enable) {
+    public Item(int id) {
+        this.id = id;
+    }
+
+    public Item(String name, String description, ItemSubType subType, boolean enable) {
         this.name = name;
         this.description = description;
         this.subType = subType;
-        this.quantity = quantity;
         this.enable = enable;
     }
 
@@ -77,13 +77,6 @@ public class Item {
         this.subType = subType;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public boolean isEnable() {
         return enable;
@@ -100,7 +93,6 @@ public class Item {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", subType=" + subType.getName() +
-                ", quantity=" + quantity +
                 ", enable=" + enable +
                 '}';
     }

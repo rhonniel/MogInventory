@@ -10,6 +10,6 @@ insert into item_type(id,name) values(7,'Magic Tome');
 
 insert into item_sub_type(id,item_type_id,name) values(1,1,'Sword');
 
-insert into item(name,description,sub_type_id,quantity,enable) values('Sword of Pachas','Pacha power hydro',1,1,true);
 
+insert into item(name,description,sub_type_id,enable) values('Sword of Pachas','Pacha power hydro',1,true);
 
