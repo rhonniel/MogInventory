@@ -26,7 +26,7 @@ public class Transaction {
 
     @Column
     @NotNull
-    @Size(min = 2, max = 2)
+    @Size(min = 2, max = 3)
     private String transactionType;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
