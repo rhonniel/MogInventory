@@ -1,36 +1,42 @@
 package com.rx.MogInventory.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Table
 @Entity
-public class Transactions {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
+    @NotBlank
     private String client;
 
     @Column
+    @NotNull
     private LocalDateTime date;
 
 
-    @JoinColumn(name = "transaction_type_id", referencedColumnName = "id")
-    @ManyToOne(cascade = CascadeType.ALL)
-    private TransactionType transactionType;
+    @Column
+    @NotNull
+    @Size(min = 2, max = 3)
+    private String transactionType;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
+    @NotNull
     List<TransactionsItems> transactionsItems;
-    public Transactions() {
+    public Transaction() {
     }
 
-    public Transactions(String client, LocalDateTime date, TransactionType transactionType, List<TransactionsItems> transactionsItems) {
+    public Transaction(String client, LocalDateTime date, String transactionType, List<TransactionsItems> transactionsItems) {
         this.client = client;
         this.date = date;
         this.transactionType = transactionType;
@@ -57,11 +63,11 @@ public class Transactions {
         this.date = date;
     }
 
-    public TransactionType getTransactionType() {
+    public String getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
+    public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
 
@@ -79,7 +85,7 @@ public class Transactions {
                 "id=" + id +
                 ", client='" + client + '\'' +
                 ", date=" + date +
-                ", transactionType=" + transactionType +
+                ", transactionType=" + transactionType+
                 ", transactionsItems=" + transactionsItems +
                 '}';
     }

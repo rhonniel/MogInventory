@@ -1,8 +1,10 @@
 package com.rx.MogInventory.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Table(name = "transaction_items")
 @Entity
@@ -12,22 +14,24 @@ public class TransactionsItems {
     private int id;
 
     @JoinColumn(name = "item_id", referencedColumnName = "id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @NotNull
     private Item item;
     @ManyToOne
     @JoinColumn(name = "transaction_id")
-    private Transactions transaction;
+    private Transaction transaction;
     @Column
+    @Positive
     private int quantity;
 
     public TransactionsItems() {
     }
 
-    public TransactionsItems(Item item, Transactions transaction, int quantity) {
+    public TransactionsItems(Item item, int quantity) {
         this.item = item;
-        this.transaction = transaction;
         this.quantity = quantity;
     }
+
 
     public int getId() {
         return id;
@@ -41,11 +45,7 @@ public class TransactionsItems {
         this.item = item;
     }
 
-    public Transactions getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transactions transaction) {
+    public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
 
