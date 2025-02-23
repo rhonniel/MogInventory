@@ -15,6 +15,9 @@ public class TransactionCrudDTO {
         this.transactionsItems = transactionsItems;
     }
 
+    public TransactionCrudDTO() {
+    }
+
     public String getClient() {
         return client;
     }

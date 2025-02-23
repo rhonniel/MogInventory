@@ -1,5 +1,6 @@
 package com.rx.MogInventory.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -31,11 +32,6 @@ public class TransactionsItems {
         this.quantity = quantity;
     }
 
-    public TransactionsItems(Item item, Transaction transaction, int quantity) {
-        this.item = item;
-        this.transaction = transaction;
-        this.quantity = quantity;
-    }
 
     public int getId() {
         return id;
@@ -47,10 +43,6 @@ public class TransactionsItems {
 
     public void setItem(Item item) {
         this.item = item;
-    }
-
-    public Transaction getTransaction() {
-        return transaction;
     }
 
     public void setTransaction(Transaction transaction) {
