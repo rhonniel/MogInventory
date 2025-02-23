@@ -1,6 +1,7 @@
 package com.rx.MogInventory.config;
 
 
+import com.rx.MogInventory.exception.InvalidTransactionException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -12,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class, ValidationException.class, MappingException.class, IllegalArgumentException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class, ConstraintViolationException.class, ValidationException.class, MappingException.class, IllegalArgumentException.class, InvalidTransactionException.class})
     public ResponseEntity<Map<String, String>> handleValidationExceptions(Exception ex) {
         Map<String, String> errors = new HashMap<>();
 
@@ -33,10 +35,9 @@ public class GlobalExceptionHandler {
             for (ConstraintViolation<?> violation : cve.getConstraintViolations()) {
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage());
             }
-        } else if (ex instanceof ValidationException ||ex instanceof MappingException||ex instanceof  IllegalArgumentException ) {
+        } else
+            {
             errors.put("errors", ex.getMessage());
-        } else {
-            errors.put("error", "Unknown validation error occurred.");
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
