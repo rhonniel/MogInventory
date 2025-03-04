@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +37,7 @@ public class TransactionsService {
 
 
 
+    @Transactional
     public Transaction saveTransaction(TransactionCrudDTO transactionCrudDTO){
 
         if(!TransactionType.isValid(transactionCrudDTO.getTransactionType())){
@@ -45,9 +47,17 @@ public class TransactionsService {
         try {
              items = transactionCrudDTO.getTransactionsItems().stream().map(itemDTO -> {
                 Item item = itemService.getItemById(itemDTO.getItem());
+                int trx_quantity = itemDTO.getQuantity();
+                if(transactionCrudDTO.getTransactionType().equals(TransactionType.OUT.name())) {
+                    trx_quantity=trx_quantity*-1;
+                    if (item.getQuantity()+trx_quantity<0){
+                        throw new RuntimeException("Stocks are insufficient, actual stock: "+item.getQuantity());
+                    }
+                }
+                item.setQuantity(item.getQuantity()+trx_quantity);
                 return new TransactionsItems(item, itemDTO.getQuantity());
             }).toList();
-        }catch (EntityNotFoundException e){
+        } catch (RuntimeException e){
             throw new InvalidTransactionException(e.getMessage());
         }
 
