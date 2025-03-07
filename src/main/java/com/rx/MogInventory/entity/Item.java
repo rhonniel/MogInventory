@@ -98,13 +98,11 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
-                "id=" + id +
+        return  "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", subType=" + subType +
+                ", subType=" + subType.getName() +
                 ", quantity=" + quantity +
-                ", enable=" + enable +
-                '}';
+                ", enable=" + enable ;
     }
 }
