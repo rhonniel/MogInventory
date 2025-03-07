@@ -8,7 +8,7 @@ Practice proyect about a simple inventory with final fantasy theme
 ## Skills Lever up
 ### GET Pagination
 ### query Spec
-### H2 Config for Env
+### H2 Config for each Env
 ### Junit5
 ### Mockito
 ### Config file log basic
