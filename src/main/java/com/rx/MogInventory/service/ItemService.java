@@ -13,6 +13,8 @@ import com.rx.MogInventory.repository.SubTypeRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +31,10 @@ import java.util.List;
 public class ItemService {
     public final ItemRepository itemRepository;
     public final SubTypeRepository subTypeRepository;
-
     public final JobLogRepository jobLogRepository;
     private final ModelMapper modelMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
     @Autowired
     public ItemService(ItemRepository itemRepository, ModelMapper modelMapper, SubTypeRepository subTypeRepository, JobLogRepository jobLogRepository) {
         this.itemRepository = itemRepository;
@@ -48,7 +51,7 @@ public class ItemService {
 
         if(itemType>0){
             spec = spec.and(((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("itemSubType").get("itemType").get("id"),itemType)));
+                    criteriaBuilder.equal(root.get("subType").get("type").get("id"),itemType)));
         }
 
         Page<Item> items=itemRepository.findAll(spec,pageable);
@@ -63,9 +66,11 @@ public class ItemService {
     public Item save(ItemCrudDTO dto) {
         Item item=modelMapper.map(dto,Item.class);
         if (!subTypeRepository.existsById(item.getSubType().getId())) {
+            logger.warn("Tipo de Item no encontrado: "+ item.getSubType().getId());
             throw new ItemSubTypeNotFoundException();
         }
         item.setEnable(true);
+        logger.info("Creando Item: "+ item);
         return itemRepository.save(item);
     }
 
@@ -77,8 +82,10 @@ public class ItemService {
         Item item =modelMapper.map(dto,Item.class);
         item.setId(getItemById(itemId).getId());
         if (!subTypeRepository.existsById(item.getSubType().getId())) {
+            logger.warn("Tipo de Item no encontrado: "+ item.getSubType().getId());
             throw new ItemSubTypeNotFoundException();
         }
+        logger.info("Editando Item: "+ item.getId());
         return itemRepository.save(item);
     }
 
@@ -96,7 +103,8 @@ public class ItemService {
         if(jobLogRepository.existsLogByDate(LocalDate.now())==0){
             itemRepository.updatesStocks();
             JobLog jobLog = new JobLog("JobInventoryUpdate", LocalDateTime.now());
-            jobLogRepository.save(jobLog);
+            jobLog= jobLogRepository.save(jobLog);
+            logger.info("Ejecución del job: "+ jobLog);
         }
     }
 
