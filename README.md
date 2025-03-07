@@ -11,3 +11,7 @@ Practice proyect about a simple inventory with final fantasy theme
 ### Junit5
 ### Mockito
 
+
+![image](https://github.com/user-attachments/assets/5914ef43-6ed4-4af3-97c4-ed586c99acb3)
+
+
