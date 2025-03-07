@@ -3,7 +3,9 @@ package com.rx.MogInventory.service;
 
 import com.rx.MogInventory.entity.Item;
 import com.rx.MogInventory.entity.ItemSubType;
+import com.rx.MogInventory.entity.Transaction;
 import com.rx.MogInventory.entity.dto.ItemCrudDTO;
+import com.rx.MogInventory.entity.dto.ItemInventoryDTO;
 import com.rx.MogInventory.repository.ItemRepository;
 import com.rx.MogInventory.repository.SubTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,11 +13,18 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +64,28 @@ public class ItemServiceTest {
 
 
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0,1}) // 0 sin filtro
+    public void getItemInventorySuccessfully(int itemType){
+        List<Item> items = new ArrayList<>();
+        items.add(new Item("Vaina1","vaina cooment1",new ItemSubType(1),true));
+        items.add(new Item("Vaina2","vaina cooment2",new ItemSubType(1),true));
+        items.add(new Item("Vaina3","vaina cooment3",new ItemSubType(1),true));
+        items.add(new Item("Vaina4","vaina cooment3",new ItemSubType(1),true));
+
+        Pageable pageable = PageRequest.of(1,10);
+
+
+
+        Page<Item> expectedPage = new PageImpl<>(items);
+
+        when(itemRepository.findAll(any(Specification.class),eq(pageable))).thenReturn(expectedPage);
+        Page<ItemInventoryDTO> itemReturn= itemService.getItemsWithFilter(itemType,pageable);
+        assertEquals(4, itemReturn.stream().count());
+
+    }
+
 
     @Test
     public void getItemByIdSuccessfully(){
