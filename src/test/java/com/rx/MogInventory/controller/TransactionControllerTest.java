@@ -39,7 +39,7 @@ public class TransactionControllerTest {
     public void saveTransactionSuccessfully() throws Exception {
         TransactionCrudDTO dto =new TransactionCrudDTO();
         dto.setClient("Gigalmech");
-        dto.setTransactionType("OUT");
+        dto.setTransactionType("IN");
 
         int ItemId= 1;
 
