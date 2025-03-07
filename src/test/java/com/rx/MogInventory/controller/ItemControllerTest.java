@@ -6,12 +6,16 @@ import com.rx.MogInventory.entity.dto.ItemCrudDTO;
 import com.rx.MogInventory.exception.ItemNotFoundException;
 import com.rx.MogInventory.exception.ItemSubTypeNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +39,17 @@ public class ItemControllerTest {
         mockMvc.perform(get("/item"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(1)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"0","1"}) // 0 sin filtro
+    public void getItemInventorySuccessfully(String itemType) throws Exception {
+        MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
+        params.add("itemType",itemType);
+        params.add("page","1");
+        params.add("limit","5");
+        mockMvc.perform(get("/item/inventory").queryParams(params))
+                .andExpect(status().isOk());
     }
 
 

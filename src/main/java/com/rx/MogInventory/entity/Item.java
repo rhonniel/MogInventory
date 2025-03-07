@@ -27,6 +27,9 @@ public class Item {
     @NotNull
     private ItemSubType subType;
 
+    @PositiveOrZero
+    @Column
+    private int quantity;
 
     @Column
     private boolean enable;
@@ -77,6 +80,13 @@ public class Item {
         this.subType = subType;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public boolean isEnable() {
         return enable;
@@ -88,12 +98,11 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
-                "id=" + id +
+        return  "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", subType=" + subType.getName() +
-                ", enable=" + enable +
-                '}';
+                ", quantity=" + quantity +
+                ", enable=" + enable ;
     }
 }

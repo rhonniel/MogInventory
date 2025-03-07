@@ -1,6 +1,9 @@
 package com.rx.MogInventory.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rx.MogInventory.entity.Item;
+import com.rx.MogInventory.entity.ItemSubType;
 import com.rx.MogInventory.entity.Transaction;
 import com.rx.MogInventory.entity.TransactionsItems;
 import com.rx.MogInventory.entity.dto.TransactionCrudDTO;
@@ -10,6 +13,7 @@ import com.rx.MogInventory.exception.InvalidTransactionException;
 import com.rx.MogInventory.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -43,9 +47,64 @@ public class TransactionServicesTest {
 
 
     @Test
-    public void saveTransactionSuccessfully(){
+    public void saveTransactionSuccessfully() throws JsonProcessingException {
         TransactionCrudDTO transactionCrudDTO = new TransactionCrudDTO();
         transactionCrudDTO.setTransactionType("IN");
+        transactionCrudDTO.setClient("Bartz");
+
+        Item swordX= new Item();
+        int ItemId= 777;
+        swordX.setName("Espada X");
+        swordX.setSubType(new ItemSubType(1));
+        swordX.setId(ItemId);
+        swordX.setQuantity(5);
+
+        Item expectedSwordX = new Item();
+        expectedSwordX.setName(swordX.getName());
+        expectedSwordX.setSubType(swordX.getSubType());
+        expectedSwordX.setId(swordX.getId());
+
+        int transactionItemQuantity=7;
+
+        //  validando sumatoria en el inventario
+        expectedSwordX.setQuantity(swordX.getQuantity()+transactionItemQuantity);
+
+
+        List<TransactionItemCrudDTO> transactionItemCrudDTOS = new ArrayList<>();
+        transactionItemCrudDTOS.add(new TransactionItemCrudDTO(ItemId,transactionItemQuantity));
+        transactionCrudDTO.setTransactionsItems(transactionItemCrudDTOS);
+
+
+        Transaction transaction = new Transaction(
+                transactionCrudDTO.getClient(),
+                LocalDateTime.now(),
+                transactionCrudDTO.getTransactionType(),
+                List.of(new TransactionsItems(swordX, transactionItemCrudDTOS.get(0).getQuantity())));
+
+
+
+        Transaction expectedTransaction = new Transaction(
+                transactionCrudDTO.getClient(),
+                LocalDateTime.now(),
+                transactionCrudDTO.getTransactionType(),
+                List.of(new TransactionsItems(expectedSwordX, transactionItemCrudDTOS.get(0).getQuantity()))
+        );
+
+        when(itemService.getItemById(ItemId)).thenReturn(swordX);
+        when(transactionsRepository.save(any(Transaction.class))).thenReturn(transaction);
+
+        Transaction result = transactionsService.saveTransaction(transactionCrudDTO);
+
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFields("date") // Ignorar la fecha porque es generada dentro del metodo, nunca seria igual
+                .isEqualTo(expectedTransaction);
+    }
+
+    @Test
+    public void saveTransactionWithOutStockItem(){
+        TransactionCrudDTO transactionCrudDTO = new TransactionCrudDTO();
+        transactionCrudDTO.setTransactionType("OUT");
         transactionCrudDTO.setClient("Bartz");
 
         Item swordX= new Item();
@@ -54,7 +113,7 @@ public class TransactionServicesTest {
         swordX.setId(ItemId);
 
         List<TransactionItemCrudDTO> transactionItemCrudDTOS = new ArrayList<>();
-        transactionItemCrudDTOS.add(new TransactionItemCrudDTO(ItemId,5));
+        transactionItemCrudDTOS.add(new TransactionItemCrudDTO(ItemId,5000));
         transactionCrudDTO.setTransactionsItems(transactionItemCrudDTOS);
 
         Transaction expectedTransaction = new Transaction(
@@ -67,11 +126,8 @@ public class TransactionServicesTest {
         when(itemService.getItemById(ItemId)).thenReturn(swordX);
         when(transactionsRepository.save(any(Transaction.class))).thenReturn(expectedTransaction);
 
-        Transaction result = transactionsService.saveTransaction(transactionCrudDTO);
-        assertThat(result)
-                .usingRecursiveComparison()
-                .ignoringFields("date") // Ignorar fecha porque es generada dentro del metodo, nunca seria igual
-                .isEqualTo(expectedTransaction);
+        assertThrows(RuntimeException.class, () -> transactionsService.saveTransaction(transactionCrudDTO));
+        verify(transactionsRepository,times(0)).save(any());
 
 
     }

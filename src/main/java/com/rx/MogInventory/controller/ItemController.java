@@ -1,9 +1,14 @@
 package com.rx.MogInventory.controller;
 
 import com.rx.MogInventory.entity.Item;
+import com.rx.MogInventory.entity.Transaction;
 import com.rx.MogInventory.entity.dto.ItemCrudDTO;
+import com.rx.MogInventory.entity.dto.ItemInventoryDTO;
 import com.rx.MogInventory.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +36,16 @@ public class ItemController {
        return itemService.save(item);
 
     }
+    @GetMapping("/inventory")
+    public Page<ItemInventoryDTO> getInventory(@RequestParam(required = false, defaultValue = "0") int itemType,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "10") int limit){
+
+        Pageable pageable = PageRequest.of(page,limit);
+        return itemService.getItemsWithFilter(itemType,pageable);
+
+    }
+
 
     @GetMapping("/{id}")
     public Item getItemById(@PathVariable("id") Integer id){
