@@ -1,5 +1,6 @@
 # MogInventory
-![images](https://github.com/user-attachments/assets/6cc11ad1-e656-42fa-9f2f-6563d658e6e9)
+![image](https://github.com/user-attachments/assets/67dbc81a-8ce6-41d6-89d1-3e6c2e8dd1c5)
+
 
 Practice proyect about a simple inventory with final fantasy theme
 
@@ -10,8 +11,5 @@ Practice proyect about a simple inventory with final fantasy theme
 ### Config file log basic
 ### Junit5
 ### Mockito
-
-
-![image](https://github.com/user-attachments/assets/5914ef43-6ed4-4af3-97c4-ed586c99acb3)
 
 
